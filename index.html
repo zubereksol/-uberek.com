@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Żuberek</title>
+<style>
+    body {
+        background: #000;
+        color: lime;
+        font-family: Arial;
+        text-align: center;
+        padding-top: 50px;
+    }
+    #passwordBox {
+        background: #222;
+        border: 2px solid lime;
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        display: none;
+        border-radius: 10px;
+    }
+    input {
+        padding: 10px;
+        width: 70%;
+        font-size: 16px;
+    }
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background: lime;
+        border: none;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+
+<h1>Kliknij aby odebrać darmowego Żuberka</h1>
+<button onclick="startPrank()">Odbierz żuberka</button>
+
+<div id="passwordBox">
+    <h2>Aby przejść dalej podaj hasło:</h2>
+    <input id="passInput" type="text" placeholder="Wpisz hasło...">
+    <button onclick="checkPass()">OK</button>
+</div>
+
+<script>
+
+// ==== TWORZENIE FAŁSZYWYCH OKIEN ====
+function showFakeWindow(msg) {
+    let w = window.open("", "", `width=260,height=160,left=${Math.random()*500},top=${Math.random()*300}`);
+    w.document.write(`
+        <body style="background:black;color:red;font-family:Arial;font-size:16px;padding:10px;">
+            <b>${msg}</b><br><br>
+            <button onclick="window.close()">Zamknij</button>
+        </body>
+    `);
+}
+
+function startPrank() {
+    // migające tło
+    let colors = ["#220000", "#660000", "#990000", "#330000"];
+    let i = 0;
+    setInterval(() => {
+        document.body.style.background = colors[i % colors.length];
+        i++;
+    }, 300);
+
+    // pierwsze okno
+    showFakeWindow("Żuberek przejmuje komputer! Instaluję trojan.exe");
+
+    setTimeout(() => {
+        showFakeWindow("Żuberek przejmuje komputer! Instaluję pack.exe");
+        showFakeWindow("Żuberek przejmuje komputer! Instaluję pack.exe");
+    }, 2000);
+
+    setTimeout(() => {
+        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
+        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
+        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
+    }, 4000);
+
+    // po chwili pojawia się pole hasła
+    setTimeout(() => {
+        document.getElementById("passwordBox").style.display = "block";
+    }, 6000);
+}
+
+
+// ==== SPRAWDZANIE HASŁA ====
+function checkPass() {
+    let pass = document.getElementById("passInput").value.toLowerCase();
+
+    // automatyczna poprawa polskich znaków
+    pass = pass
+        .replace(/ż/g, "z")
+        .replace(/ó/g, "o")
+        .replace(/ą/g, "a")
+        .replace(/ę/g, "e")
+        .replace(/ś/g, "s")
+        .replace(/ł/g, "l")
+        .replace(/ź/g, "z")
+        .replace(/ć/g, "c")
+        .replace(/ń/g, "n");
+
+    let correct = "zuberek przejmuje komputer";
+
+    if (pass === correct) {
+
+        document.body.innerHTML = `
+            <h1 style="color:lime">TO BYŁ PRANK XD</h1>
+            <p>Miłego żuberkowego dnia!</p>
+            <button onclick="window.location.href='zubr.png'">Pobierz żuberka</button>
+        `;
+    } else {
+        alert("Błędne hasło!");
+    }
+}
+
+</script>
+
+</body>
+</html>
