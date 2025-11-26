@@ -2,124 +2,180 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Żuberek</title>
+<title>ŻUBEREK 2.0</title>
 <style>
-    body {
-        background: #000;
-        color: lime;
-        font-family: Arial;
-        text-align: center;
-        padding-top: 50px;
-    }
-    #passwordBox {
-        background: #222;
-        border: 2px solid lime;
-        width: 80%;
-        margin: 0 auto;
-        padding: 20px;
-        display: none;
-        border-radius: 10px;
-    }
-    input {
-        padding: 10px;
-        width: 70%;
-        font-size: 16px;
-    }
-    button {
-        padding: 10px 20px;
-        margin-top: 10px;
-        background: lime;
-        border: none;
-        font-size: 16px;
-        border-radius: 5px;
-    }
+body {
+    margin:0;
+    background:black;
+    color:white;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+    text-align:center;
+}
+
+/* STARTOWY PRZYCISK */
+#startScreen {
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    padding:25px;
+    font-size:24px;
+    background:#222;
+    border:3px solid red;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* LOGI */
+#logBox {
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:40%;
+    background:black;
+    border-top:3px solid red;
+    overflow-y:auto;
+    padding:10px;
+    font-family:monospace;
+    font-size:15px;
+    display:none;
+}
+
+/* OKIENKA WIRUSA */
+.virusWindow {
+    position:fixed;
+    width:260px;
+    background:#200;
+    border:3px solid red;
+    padding:8px;
+    z-index:50;
+    color:white;
+}
+
+/* OKNO Z HASŁEM */
+#passwordBox {
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    background:#111;
+    border:3px solid yellow;
+    padding:25px;
+}
+
+/* NAGRODA */
+#rewardBox {
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    background:#111;
+    border:3px solid green;
+    padding:25px;
+}
 </style>
 </head>
 <body>
 
-<h1>Kliknij aby odebrać darmowego Żuberka</h1>
-<button onclick="startPrank()">Odbierz żuberka</button>
+<!-- EKRAN STARTOWY -->
+<div id="startScreen">Odbierz darmowe przytulanki Żubra</div>
 
+<!-- LOGI -->
+<div id="logBox"></div>
+
+<!-- OKNO Z HASŁEM -->
 <div id="passwordBox">
-    <h2>Aby przejść dalej podaj hasło:</h2>
-    <input id="passInput" type="text" placeholder="Wpisz hasło...">
-    <button onclick="checkPass()">OK</button>
+    <p>Aby zatrzymać system Żuberos wpisz hasło:</p>
+    <input type="password" id="passwordInput"><br><br>
+    <button onclick="checkPassword()">Potwierdź</button>
+    <p id="wrongPass" style="color:red; display:none;">Złe hasło!</p>
+</div>
+
+<!-- NAGRODA -->
+<div id="rewardBox">
+    <p>Żuber docenia twoją lojalność!</p>
+    <a href="zubr.png" download>
+        <button>Pobierz maskotkę Żubra</button>
+    </a>
 </div>
 
 <script>
+let logs = [
+    "[LOG] Wylogowuję z ŻubScord...",
+    "[LOG] Usuwam konto z ŻubGogle...",
+    "[LOG] Instaluję system ŻubOS...",
+    "[LOG] Skanuję komputer pod kątem braku żuberka...",
+    "[LOG] Wysyłam raport do centrali Żubów...",
+    "[LOG] Wzmacniam moc przytulaków..."
+];
 
-// ==== TWORZENIE FAŁSZYWYCH OKIEN ====
-function showFakeWindow(msg) {
-    let w = window.open("", "", `width=260,height=160,left=${Math.random()*500},top=${Math.random()*300}`);
-    w.document.write(`
-        <body style="background:black;color:red;font-family:Arial;font-size:16px;padding:10px;">
-            <b>${msg}</b><br><br>
-            <button onclick="window.close()">Zamknij</button>
-        </body>
-    `);
-}
+/* START */
+document.getElementById("startScreen").onclick = function () {
+    this.style.display = "none";
+    document.body.style.background = "#300";
+    startVirus();
+};
 
-function startPrank() {
-    // migające tło
-    let colors = ["#220000", "#660000", "#990000", "#330000"];
+function startVirus() {
+    document.getElementById("logBox").style.display = "block";
     let i = 0;
-    setInterval(() => {
-        document.body.style.background = colors[i % colors.length];
+
+    let interval = setInterval(() => {
+        addLog(logs[i]);
+        createWindow("Żuberek przejmuje komputer!");
+
         i++;
-    }, 300);
+        if (i >= logs.length) {
+            clearInterval(interval);
+            setTimeout(showPassword, 1000);
+        }
 
-    // pierwsze okno
-    showFakeWindow("Żuberek przejmuje komputer! Instaluję trojan.exe");
-
-    setTimeout(() => {
-        showFakeWindow("Żuberek przejmuje komputer! Instaluję pack.exe");
-        showFakeWindow("Żuberek przejmuje komputer! Instaluję pack.exe");
-    }, 2000);
-
-    setTimeout(() => {
-        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
-        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
-        showFakeWindow("Żuberek przejmuje komputer! Instaluję virus.exe");
-    }, 4000);
-
-    // po chwili pojawia się pole hasła
-    setTimeout(() => {
-        document.getElementById("passwordBox").style.display = "block";
-    }, 6000);
+    }, 800);
 }
 
+function addLog(text) {
+    let logBox = document.getElementById("logBox");
+    logBox.innerHTML += text + "<br>";
+    logBox.scrollTop = logBox.scrollHeight;
+}
 
-// ==== SPRAWDZANIE HASŁA ====
-function checkPass() {
-    let pass = document.getElementById("passInput").value.toLowerCase();
+/* FAKE OKIENKA */
+function createWindow(text) {
+    let w = document.createElement("div");
+    w.className = "virusWindow";
+    w.innerHTML = text;
 
-    // automatyczna poprawa polskich znaków
-    pass = pass
-        .replace(/ż/g, "z")
-        .replace(/ó/g, "o")
-        .replace(/ą/g, "a")
-        .replace(/ę/g, "e")
-        .replace(/ś/g, "s")
-        .replace(/ł/g, "l")
-        .replace(/ź/g, "z")
-        .replace(/ć/g, "c")
-        .replace(/ń/g, "n");
+    w.style.left = Math.random()*70 + "%";
+    w.style.top = Math.random()*60 + "%";
 
-    let correct = "zuberek przejmuje komputer";
+    document.body.appendChild(w);
 
-    if (pass === correct) {
+    w.onclick = () => {
+        document.body.removeChild(w);
+    };
+}
 
-        document.body.innerHTML = `
-            <h1 style="color:lime">TO BYŁ PRANK XD</h1>
-            <p>Miłego żuberkowego dnia!</p>
-            <button onclick="window.location.href='zubr.png'">Pobierz żuberka</button>
-        `;
+/* OKNO HASŁA */
+function showPassword() {
+    document.getElementById("passwordBox").style.display = "block";
+}
+
+/* SPRAWDZANIE HASŁA */
+function checkPassword() {
+    let val = document.getElementById("passwordInput").value;
+    if (val === "żubr") {
+        document.getElementById("passwordBox").style.display = "none";
+        document.getElementById("rewardBox").style.display = "block";
     } else {
-        alert("Błędne hasło!");
+        document.getElementById("wrongPass").style.display = "block";
     }
 }
-
 </script>
 
 </body>
 </html>
+
